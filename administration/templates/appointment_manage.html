@@ -1,0 +1,79 @@
+{% extends '_administrations.html' %}
+
+{% block innerSection %}
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#appointMent"
+{% if form.errors %}
+  data-click="True"
+{% endif %}
+>Create Appointment</button>
+<div class="card" id="appointments">
+    <div class="card-header">Appointments</div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Apointment Date</th>
+            <th>Doctor</th>
+            <th>Status</th>
+            <th>Bill</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appointment in appointments %}
+          <tr>
+            <td>{{ appointment.appointment_date }}</td>
+            <th scope="row">{{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}</th>
+            <td></td>
+            <td>
+                <span class="badge {% if appointment.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                {{ appointment.status }}</span>
+            </td>
+            <td>
+                <a href="{% url 'accept_appointment' appointment.id %}" class="btn btn-primary">Confirm</a>
+                <a href="{% url 'delete_appointment' appointment.id %}" class="btn btn-danger">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal fade" id="appointMent" tabindex="-1" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Prescription Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+              <form action="" method="post">
+                {% csrf_token %}
+                <div class="card prescription-card">
+                  <div class="card-body prescription-body">
+                      <div class="prescription-section">
+                          <label for="">Patient:</label>
+                          {{ form.patient }}
+                          {{ form.patient.errors }}
+                      </div>
+                      <div class="prescription-section">
+                        <label for="">Doctor:</label>
+                        {{ form.doctor }}
+                        {{ form.doctor.errors }}
+                      </div>
+                      <div class="prescription-section">
+                        <label for="appointment_date">Appointment Date:</label>
+                        {{ form.appointment_date }}
+                        {{ form.appointment_date.errors }}
+                      </div>
+                      <input type="submit" value="Save" class="btn btn-primary mt-2 w-100">
+                  </div>
+              </div>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock innerSection %}

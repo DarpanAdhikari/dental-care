@@ -1,0 +1,162 @@
+{% load bootstrap5 %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dental Hospital</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static './css/style.css' %}" />
+    {% block css %}
+    {% endblock css %}
+  </head>
+  <body>
+    <header>
+      <a href="#" class="logo"><span>D</span>ent <span>C</span>are</a>
+      <nav class="navbar">
+        <ul>
+          <li><a href="#home">home</a></li>
+          <li><a href="#about">about</a></li>
+          <li><a href="#doctor">doctor</a></li>
+          <li><a href="#review">review</a></li>
+          <li><a href="#blog">blog</a></li>
+          
+          {% if user.is_authenticated %}
+            <li>
+              <a href="{% url 'dashboard' %}">
+                <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+                  <button type="button" class="btn btn-warning">
+                    Dashboard
+                  </button>
+                </div>
+              </a>
+              <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+                <form action="{% url 'logout' %}" class="btn btn-danger" method="post">
+                  {% csrf_token %}
+                  <input type="submit" value="Log out" class="bg-danger">
+                </form> 
+              </div>
+            </li>
+        {% else %}
+          <li>
+            <a href="{% url 'register_patient' %}">
+              <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+                <button type="button" class="btn btn-warning">
+                  Register Patient
+                </button>
+              </div>
+            </a>
+            <a href="{% url 'login' %}">
+              <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+                <button type="button" class="btn btn-success">
+                  Login Patient
+                </button>
+              </div>
+            </a>
+          </li>
+        {% endif %}
+        
+        </ul>
+      </nav>
+      <div class="fas fa-bars"></div>
+    </header>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+    {% block content %} {% endblock content %}
+
+    <section class="footer">
+      <div class="box">
+        <h2 class="logo"><span>D</span>octors <span>C</span>ares</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam
+          laboriosam quisquam facere pariatur ratione porro et vero dolore
+          accusamus id?
+        </p>
+      </div>
+      <div class="box">
+        <h2 class="logo"><span>S</span>hare</h2>
+        <a href="#">facebook</a>
+        <a href="#">twitter</a>
+        <a href="#">instagram</a>
+        <a href="#">pinterest</a>
+      </div>
+      <div class="box">
+        <h2 class="logo"><span>L</span>inks</h2>
+        <a href="#">home</a>
+        <a href="#">about</a>
+        <a href="#">Doctor</a>
+        <a href="#">Review</a>
+        <a href="#">contact</a>
+        <a href="#">blog</a>
+      </div>
+      <h1 class="credit">
+        Copyright
+        <a href="https://darpanadhikari.com.np/"
+          ><span>Darpan Adhikari</span></a
+        >
+        all right reserved.
+      </h1>
+    </section>
+    {% bootstrap_javascript %}
+    <script src="{% static './js/main.js' %}"></script>
+    
+    {% block script %}
+        
+    {% endblock script %}
+    {% if messages %}
+    <div class="fixed-bottom h3">
+        {% for message in messages %}
+        <span class="alert {% if 'success' in message.tags %} alert-success {% elif 'error' in message.tags %} alert-danger{% else %} alert-warning {% endif %} alert-dismissible fade show"
+                role="alert">
+            <strong>Alert!</strong> {{ message }}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </span>
+        {% endfor %}
+    </div>
+{% endif %}
+    <script>
+      const futureDatePick = document.querySelectorAll(".futureDate"); 
+      futureDatePick.forEach((pick) => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        pick.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+      });
+      window.onload = function() {
+        const alertDiv = document.querySelector('span[role="alert"]');
+        if (alertDiv) {
+          const firstForm = document.querySelector('form');
+          if (firstForm) {
+            firstForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      };
+    </script>
+  </body>
+</html>

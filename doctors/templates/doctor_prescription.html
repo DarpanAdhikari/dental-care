@@ -1,0 +1,89 @@
+{% extends '_doctors.html' %}
+
+{% block innerSection %}
+<div class="card" id="appointments">
+    <div class="card-header">Completed Appointments</div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Apointment Date</th>
+            <th>Doctor</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appointment in appointments %}
+          <tr>
+            <td>{{ appointment.appointment_date }}</td>
+            <th scope="row">{{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}</th>
+            <td>
+                <a href="{% url 'prescription_form' appointment.id %}" class="btn btn-primary">Prescribe</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- -----------prescription form--------------- -->
+
+{% if form %}
+<div
+class="modal fade show"
+id="staticBackdrop"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="staticBackdropLabel"
+aria-hidden="true"
+style="display: block;"
+>
+<div class="modal-lg modal-dialog modal-dialog-scrollable">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="staticBackdropLabel">Prescription Form</h4>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                  {% csrf_token %}
+                  {% for error in non_field_errors %}
+                    <p class="text-danger">{{ error }}</p>
+                  {% endfor %}
+                  <input type="hidden" name="appointment" value="{{ app_id }}">
+                  <div class="mb-2">
+                      <label for="diagnosis" class="form-label">Diagnosis</label>
+                      {{ form.diagnosis }}
+                      {{ form.diagnosis.errors }}
+                  </div>
+                  <div class="mb-2">
+                      <label for="medicines" class="form-label">Medicines Prescribed</label>
+                      {{ form.medicines }}
+                      {{ form.medicines.errors }}
+                  </div>
+                  <div class="mb-2">
+                      <label for="advice" class="form-label">Advice</label>
+                      {{ form.advice }}
+                      {{ form.advice.errors }}
+                  </div>
+                  <div class="d-grid">
+                      <button type="submit" class="btn btn-primary btn-lg">Submit Prescription</button>
+                  </div>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="{% url 'manage_prescription' %}" class="btn btn-danger">Cancel</a>
+    </div>
+  </div>
+</div>
+</div>
+{% endif %}
+  
+{% endblock innerSection %}

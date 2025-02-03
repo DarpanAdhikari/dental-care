@@ -1,0 +1,166 @@
+{% extends '_administrations.html' %} 
+{% block innerSection %}
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#staticBackdrop"
+  {% with user_errors=userForm.errors doctor_errors=doctorForm.errors %}
+    {% if user_errors or doctor_errors or is_edit_mode %}
+      data-click="True"
+    {% endif %}
+  {% endwith %}
+>
+  
+  {% if not is_edit_mode %}
+    Register
+  {% else %}
+    Update
+  {% endif %}
+     Patient
+</button>
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-lg modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="staticBackdropLabel">
+          Patient {% if not is_edit_mode %}
+          Registeration
+        {% else %}
+          Updatation
+        {% endif %}
+        </h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-container">
+        <form action="#" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    {{ userForm.first_name }} 
+                    {{ userForm.first_name.errors }}
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    {{ userForm.last_name }} 
+                    {{ userForm.last_name.errors }}
+                </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                {{ userForm.email }} 
+                {{ userForm.email.errors }}
+            </div>
+            {% if not is_edit_mode %}
+            <div class="form-group">
+                <label for="password">Password</label>
+                {{ userForm.password1 }} 
+                {{ userForm.password1.errors }}
+                <ul>
+                    <li>Your password can’t be too similar to your other personal information.</li>
+                    <li>Your password must contain at least 8 characters.</li>
+                    <li>Your password can’t be a commonly used password.</li>
+                    <li>Your password can’t be entirely numeric.</li>
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="password">Confirm Password</label>
+                {{ userForm.password2 }} 
+                {{ userForm.password2.errors }}
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                {{ patientForm.phone }} 
+                {{ patientForm.phone.errors }}
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                {{ patientForm.address }} 
+                {{ patientForm.address.errors }}
+            </div>
+            <div class="form-group">
+                <label for="medical_history">Medical History</label>
+                {{ patientForm.medical_history }} 
+                {{ patientForm.medical_history.errors }}
+            </div>
+            <div class="form-group">
+                <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary w-100">
+                      {% if not is_edit_mode %}
+                      Register
+                    {% else %}
+                      Update
+                    {% endif %}
+                    </button>
+                </div>
+                </div>
+            </div>
+            </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'patient_mng' %}" class="btn btn-danger">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-4">
+  <table class="table table-striped table-hover table-responsive">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Address</th>
+        <th scope="col">medical_history</th>
+        <th scope="col">Phone</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody class="text-capitalize">
+      {% for patient in patients %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ patient.user.first_name }} {{ patient.user.last_name }}</td>
+        <td>{{ patient.user.email }}</td>
+        <th scope="row" class="text-uppercase">{{ patient.address }}</th>
+        <td>{{ patient.medical_history }}</td>
+        <td>{{ patient.phone }}</td>
+        <td>
+          <a href="{% url 'edit_patient' patient.id %}">
+            <button class="btn btn-primary">Edit</button>
+          </a>
+          <form action="delete_patient" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user" value="{{ patient.user.id }}">
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock innerSection %}

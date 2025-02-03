@@ -1,0 +1,27 @@
+{% extends '_dash_layout.html' %} 
+{% block title %} Admin Dashboard {% endblock title %} 
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3 col-lg-2 sidebar">
+      <h3>Dashboard</h3>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'admin_index' %}">Analytics</a>
+      <a href="{% url 'bills' %}">Bills</a>
+      <a href="{% url 'manage_appointments' %}">Appointments Manage</a>
+      <a href="{% url 'doctor_mng' %}">Manage Doctors</a>
+      <a href="{% url 'patient_mng' %}">Patient Manage</a>
+      <a href="{% url 'manage-accounts' %}">Manage Account</a>
+      <a href="{% url 'post_index' %}">Manage Posts</a>
+      <form action="{% url 'logout' %}" class="btn bg-none" method="post">
+       {% csrf_token %}
+       <input type="submit" value="Log Out" class="bg-transparent text-white">
+      </form> 
+      <h4 class="user-name text-capitalize">{{ user.first_name }} {{ user.last_name }}</h4>
+    </div>
+    <div class="col-9 col-lg-10 main-content">
+      {% block innerSection %} {% endblock innerSection %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends '_dash_layout.html' %} 
+{% block title %} Patient Dashboard {% endblock title %} 
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3 col-lg-2 sidebar">
+      <h3>Dashboard</h3>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'pat_dashboard' %}">Patient Information</a>
+      <a href="{% url 'edit_profile' user.id %}">Edit Profile</a>
+      <form action="{% url 'logout' %}" class="btn bg-none" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Log Out" class="bg-transparent text-white">
+      </form> 
+      <h4 class="user-name text-capitalize">{{ user.first_name }} {{ user.last_name }}</h4>
+    </div>
+    <div class="col-9 col-lg-10 main-content">
+      {% block innerSection %} {% endblock innerSection %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,82 @@
+{% extends '_administrations.html' %}
+
+{% block innerSection %}
+{% load humanize %}
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card text-center p-3 text-white bg-info">
+      <h4>Total Patients</h4>
+      <p id="total-patients" class="display-6">{{ totalPatient }}</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3 text-white bg-warning">
+      <h4>Total Appointments</h4>
+      <p id="total-appointments" class="display-6">{{ totalApointment }}</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3 text-white bg-secondary">
+      <h4>Total Bill</h4>
+      <p id="total-prescriptions" class="display-6">{{ totalAmount|default:'0'|intcomma }}</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3 text-white bg-success">
+      <h4>Busy Doctor</h4>
+      <p id="most-reserved-doctor" class="display-6">{{ busyDoctor.user.first_name }} {{ busyDoctor.user.last_name }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card p-3 row">
+      <h2>Appointment Analytics</h2>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card text-center p-3 text-white bg-info">
+            <h4>Pending</h4>
+            <p id="total-patients" class="display-6">{{ appointmentCounter.totalPending }}</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center p-3 text-white bg-info">
+            <h4>Confirmed</h4>
+            <p id="total-appointments" class="display-6">{{ appointmentCounter.totalConfirm }}</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center p-3 text-success bg-info">
+            <h4>Completed</h4>
+            <p id="total-prescriptions" class="display-6">{{ appointmentCounter.totalComplete }}</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center p-3 text-danger bg-info">
+            <h4>Cancelled</h4>
+            <p id="total-prescriptions" class="display-6">{{ appointmentCounter.totalCancel }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <h2>Prescription Analytics</h2>
+  <div class="col-md-6">
+    <div class="card text-center p-3 text-white bg-primary">
+      <h4>To Be Priscribed</h4>
+      <p id="total-patients" class="display-6">{{ appointmentCounter.totalConfirm }}</p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card text-center p-3 text-white bg-success">
+      <h4>Completed Prescription</h4>
+      <p id="total-appointments" class="display-6">{{ appointmentCounter.totalComplete }}</p>
+    </div>
+  </div>
+</div>
+{% endblock innerSection %}
+  

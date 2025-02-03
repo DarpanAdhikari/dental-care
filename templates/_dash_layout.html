@@ -1,0 +1,65 @@
+{% load bootstrap5 %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %} {% endblock title %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    {% bootstrap_css %} {% bootstrap_javascript %}
+    <link rel="stylesheet" href="{% static '/css/dashboard.css' %}" />
+  </head>
+  <body>
+    {% block content %} {% endblock content %}
+    {% if messages %}
+    <div class="fixed-bottom">
+        {% for message in messages %}
+        <span class="alert {% if 'success' in message.tags %} alert-success {% elif 'error' in message.tags %} alert-danger{% else %} alert-warning {% endif %} alert-dismissible fade show"
+                role="alert">
+            <strong>Alert!</strong> {{ message }}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </span>
+        {% endfor %}
+    </div>
+{% endif %}
+    <script>
+      const passwordFields = document.querySelectorAll("input");
+      passwordFields.forEach((pass, index) => {
+        if (pass.type == "password") {
+          pass.classList.add("pass-" + index);
+        }
+        pass.addEventListener("dblclick", (e) => {
+          if (
+            pass.type == "password" &&
+            pass.classList.contains("pass-" + index)
+          ) {
+            pass.type = "text";
+          } else if (
+            pass.type == "text" &&
+            pass.classList.contains("pass-" + index)
+          ) {
+            pass.type = "password";
+          }
+        });
+      });
+      document.querySelectorAll('*[data-click]').forEach((allClick) => {
+        setTimeout(() => allClick.click(), 0);
+      });
+      document.addEventListener("DOMContentLoaded", () => {
+          document.querySelectorAll("pre").forEach(pre => {
+              pre.textContent = pre.textContent
+                  .split("\n")
+                  .map(line => line.trimStart())
+                  .join("\n");
+          });
+      });
+
+    </script>
+  </body>
+</html>

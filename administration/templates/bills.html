@@ -1,0 +1,133 @@
+{% extends '_administrations.html' %}
+
+{% block innerSection %}
+<div class="card" id="prescriptions">
+    <div class="card-header">Completed Appointments</div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Apointment Date</th>
+            <th>Prescription</th>
+            <th>Patient</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prescription in prescriptions %}
+          <tr>
+            <td>{{ prescription.appointment.appointment_date }}</td>
+            <th scope="row">{{ prescription.appointment.patient.user.first_name }} {{ prescription.appointment.patient.user.last_name }}</th>
+            <td>
+              <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#prescriptionModal-{{ forloop.counter }}">View</button>
+            </td>
+            <td>
+                <a href="{% url 'bill_pay' prescription.appointment.id %}" class="btn btn-primary">Pay Bill</a>
+            </td>
+          </tr>
+          <div class="modal fade" id="prescriptionModal-{{ forloop.counter }}" tabindex="-1" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Prescription Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                      <div class="card prescription-card">
+                          <div class="card-body prescription-body">
+                              <div class="prescription-section">
+                                  <p><strong>Patient:</strong> {{ prescription.appointment.patient.user.first_name }} {{ prescription.appointment.patient.user.last_name }}</p>
+                                  <p><strong>Date & Time:</strong> {{ prescription.appointment.appointment_date }}</p>
+                              </div>
+                              <hr>
+                              <div class="prescription-section">
+                                  <h5 class="text-decoration-underline">Diagnosis</h5>
+                                  <p>
+                                    {{ prescription.diagnosis }}
+                                  </p>
+                              </div>
+                              <div class="prescription-section">
+                                  <h5 class="text-decoration-underline">Medicines Prescribed</h5>
+                                  <p>
+                                    <pre style="white-space: pre-wrap;">
+                                      {{ prescription.medicines }}
+                                    </pre>
+                                  </p>
+                              </div>
+                              <div class="prescription-section">
+                                  <h5 class="text-decoration-underline">Advice</h5>
+                                  <p>
+                                    <pre style="white-space: pre-wrap;">
+                                      {{ prescription.advice }}
+                                    </pre>
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% if form %}
+<div
+class="modal fade show"
+id="staticBackdrop"
+data-bs-backdrop="static"
+data-bs-keyboard="false"
+tabindex="-1"
+aria-labelledby="staticBackdropLabel"
+aria-hidden="true"
+style="display: block;"
+>
+<div class="modal-lg modal-dialog modal-dialog-scrollable">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="staticBackdropLabel">Prescription Form</h4>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="appointment" value="{{ app_id }}">
+                  <div class="mb-2">
+                      <label for="amount" class="form-label">Amount:</label>
+                      {{ form.amount }}
+                      {{ form.amount.errors }}
+                  </div>
+                  <div class="mb-2">
+                      <label for="payment_status" class="form-label">Payment Status:</label>
+                      <small class="text-danger"><i>*if paid then check otherwise uncheck</i></small>
+                      {{ form.payment_status }}
+                      {{ form.payment_status.errors }}
+                  </div>
+                  <div class="mb-2">
+                      <label for="invoice_num" class="form-label">Transaction Code:</label>
+                      <small class="text-danger"><i>*if transaction is physical then leave empty</i></small>
+                      {{ form.invoice_num }}
+                      {{ form.invoice_num.errors }}
+                  </div>
+                  <div class="d-grid">
+                      <button type="submit" class="btn btn-primary btn-lg">Payment</button>
+                  </div>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="{% url 'bills' %}" class="btn btn-danger">Cancel</a>
+    </div>
+  </div>
+</div>
+</div>
+{% endif %}
+{% endblock innerSection %}

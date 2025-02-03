@@ -1,0 +1,74 @@
+{% extends '_doctors.html' %} 
+{% block innerSection %}
+
+<div class="form-container">
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ userForm.field_errors }}
+      {{ doctorForm.field_errors }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            {{ userForm.first_name }} 
+            {{ userForm.first_name.errors }}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            {{ userForm.last_name }} 
+            {{ userForm.last_name.errors }}
+          </div>
+        </div>
+      </div> 
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        {{ doctorForm.contact }} 
+        {{ doctorForm.contact.errors }}
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        {{ doctorForm.profile_img }} 
+        {{ doctorForm.profile_img.errors }}
+      </div>
+      <div class="form-group">
+        <label for="qualification">Qualification</label>
+        {{ doctorForm.qualification }} 
+        {{ doctorForm.qualification.errors }}
+      </div>
+      <div class="form-group">
+        <label for="specialization">Specialization</label>
+        {{ doctorForm.specialization }} 
+        {{ doctorForm.specialization.errors }}
+      </div>
+      <div class="form-group">
+        <label for="available_days">Available Days</label>
+        {{ doctorForm.available_days }} 
+        {{ doctorForm.available_days.errors }}
+      </div>
+      <div class="form-group">
+        <label for="facebook">Facebook Url:</label>
+        {{ doctorForm.facebook }} 
+        {{ doctorForm.facebook.errors }}
+      </div>
+      <div class="form-group">
+          <label for="twitter">Twitter Url:</label>
+          {{ doctorForm.twitter }} 
+          {{ doctorForm.twitter.errors }}
+        </div>
+        <div class="form-group">
+          <label for="instagram">Instagram Url:</label>
+          {{ doctorForm.instagram }} 
+          {{ doctorForm.instagram.errors }}
+        </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12">
+            <button type="submit" class="btn btn-primary w-100">Update</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock innerSection %}

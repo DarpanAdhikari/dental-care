@@ -1,0 +1,223 @@
+{% extends '_administrations.html' %} 
+{% block innerSection %}
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#staticBackdrop"
+  {% with user_errors=userForm.errors doctor_errors=doctorForm.errors %}
+    {% if user_errors or doctor_errors or is_edit_mode %}
+      data-click="True"
+    {% endif %}
+  {% endwith %}
+>
+  
+  {% if not is_edit_mode %}
+    Register
+  {% else %}
+    Update
+  {% endif %}
+     Doctor
+</button>
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-lg modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="staticBackdropLabel">
+          Doctor {% if not is_edit_mode %}
+          Registeration
+        {% else %}
+          Updatation
+        {% endif %}
+        </h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-container">
+          <form action="" method="post">
+            {% csrf_token %}
+            {% with user_errors=userForm.errors doctor_errors=doctorForm.errors %}
+              {% if user_errors or doctor_errors %}
+                <ul class="errorlist">
+                  {% for field_errors in user_errors.values %}
+                    {% for error in field_errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                  {% for field_errors in doctor_errors.values %}
+                    {% for error in field_errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endwith %}
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="first_name">First Name</label>
+                  {{ userForm.first_name }} 
+                  {{ userForm.first_name.errors }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="last_name">Last Name</label>
+                  {{ userForm.last_name }} 
+                  {{ userForm.last_name.errors }}
+                </div>
+              </div>
+            </div> 
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              {{ userForm.email }} 
+              {{ userForm.email.errors }}
+            </div>
+            {% if not is_edit_mode %}
+            <div class="form-group">
+              <label for="password">Password</label>
+              {{ userForm.password1 }} 
+              {{ userForm.password1.errors }}
+              <ul>
+                <li>
+                  Your password can’t be too similar to your other personal
+                  information.
+                </li>
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be a commonly used password.</li>
+                <li>Your password can’t be entirely numeric.</li>
+              </ul>
+            </div>  
+            <div class="form-group">
+              <label for="password">Confirm Password</label>
+              {{ userForm.password2 }} 
+              {{ userForm.password2.errors }}
+            </div>
+            {% endif %}
+              
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              {{ doctorForm.contact }} 
+              {{ doctorForm.contact.errors }}
+            </div>
+            <div class="form-group">
+              <label for="qualification">Qualification</label>
+              {{ doctorForm.qualification }} 
+              {{ doctorForm.qualification.errors }}
+            </div>
+            <div class="form-group">
+              <label for="specialization">Specialization</label>
+              {{ doctorForm.specialization }} 
+              {{ doctorForm.specialization.errors }}
+            </div>
+            <div class="form-group">
+              <label for="available_days">Available Days</label>
+              {{ doctorForm.available_days }} 
+              {{ doctorForm.available_days.errors }}
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-12">
+                  <button type="submit" class="btn btn-primary w-100">
+                    {% if not is_edit_mode %}
+                      Register
+                    {% else %}
+                      Update
+                    {% endif %}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'doctor_mng' %}" class="btn btn-danger">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-4 table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Qualification</th>
+        <th scope="col">Specialization</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Appointment</th>
+        <th scope="col">Social Media</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody class="text-capitalize">
+      {% for doctor in doctors %}
+        
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ doctor.user.first_name }} {{ doctor.user.last_name }}</td>
+        <td class="text-lowercase"><a href="mailto:{{ doctor.user.email }}">{{ doctor.user.email }}</a></td>
+        <th scope="row" class="text-uppercase">{{ doctor.qualification }}</th>
+        <td>{{ doctor.specialization }}</td>
+        <td><a href="tel:+977{{ doctor.contact }}">{{ doctor.contact }}</a></td>
+        <td>
+          <table class="table table-dark text-center">
+            <tr>
+              <th>Pending</th>
+              <th>Confirmed</th>
+              <th>Completed</th>
+              <th>Cancelled</th>
+            </tr>
+            <tr>
+              <td class="text-info">{{ doctor.pending_count }}</td>
+              <td class="text-warning">{{ doctor.confirmed_count }}</td>
+              <td class="text-success">{{ doctor.completed_count }}</td>
+              <td class="text-danger">{{ doctor.cancelled_count }}</td>
+            </tr>
+          </table>
+        </td>
+        <td class="text-lowercase">
+          <ul>
+            <li>
+              <a href="{{ doctor.facebook|default:'' }}"><i class="fab fa-facebook"></i> {{ doctor.facebook|default:'' }}</a>
+            </li>
+            <li>
+              <a href="{{ doctor.twitter|default:'' }}"><i class="fab fa-x-twitter"></i> {{ doctor.twitter|default:'' }}</a>
+            </li>
+            <li>
+              <a href="{{ doctor.instagram|default:'' }}"><i class="fab fa-instagram"></i> {{ doctor.instagram|default:'' }}</a>
+            </li>
+          </ul>
+        </td>
+        <td>
+          <a href="{% url 'edit_doctor' doctor.id %}">
+            <button class="btn btn-primary">Edit</button>
+          </a>
+          <form action="{% url 'delete_doctor' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user" value="{{ doctor.user.id }}">
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock innerSection %}

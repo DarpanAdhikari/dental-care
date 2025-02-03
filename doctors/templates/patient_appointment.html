@@ -1,0 +1,33 @@
+{% extends '_doctors.html' %}
+
+{% block innerSection %}
+<div class="card" id="appointments">
+    <div class="card-header">Appointments</div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Apointment Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appointment in appointments %}
+          <tr>
+            <td>{{ appointment.appointment_date }}</td>
+            <td>
+                <span class="badge {% if appointment.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                {{ appointment.status }}</span>
+            </td>
+            <td>
+                <a href="{% url 'confirm_appointment' appointment.id %}" class="btn btn-primary">Confirm</a>
+                <a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-danger">Cancel</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock innerSection %}

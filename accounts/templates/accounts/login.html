@@ -1,0 +1,25 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+     Register
+{% endblock title %}
+
+{% block content %}
+<div class="content"> 
+    <h2><a href="{% url 'home' %}" class="fas fa-house"></a> Log In</h2> 
+    <form method="post" class="form"> 
+        {% csrf_token %}
+     <div class="inputBox"> 
+      <input type="text" name="username" value="{{ username }}" autofocus required> <i>Username/email</i> 
+     </div> 
+     <div class="inputBox"> 
+      <input type="password" name="pass1" required> <i>Password</i> 
+     </div> 
+     <div class="inputBox"> 
+      <input type="submit" value="Login"> 
+     </div> 
+    </form> 
+   </div> 
+{% endblock content %}
+    
+    

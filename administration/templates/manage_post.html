@@ -1,0 +1,119 @@
+{% extends '_administrations.html' %} 
+{% block innerSection %}
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#staticBackdrop"
+    {% if form.errors or editable %}
+      data-click="True"
+    {% endif %}
+>
+  
+  {% if not editable %}
+    Register
+  {% else %}
+    Update
+  {% endif %}
+     Doctor
+</button>
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-lg modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="staticBackdropLabel">
+          Post {% if not editable %}
+          Creation
+        {% else %}
+          Updatation
+        {% endif %}
+        </h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}">Title</label>
+                    {{ form.title }}
+                    {{ form.title.errors }}
+                </div>
+        
+                <div class="form-group">
+                    <label for="{{ form.slug.id_for_label }}">Slug</label>
+                    {{ form.slug }}
+                    {{ form.slug.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.feature_img.id_for_label }}">Feature Image</label>
+                    {{ form.feature_img }}
+                    {{ form.feature_img.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.keywords.id_for_label }}">Keywords</label>
+                    {{ form.keywords }}
+                    {{ form.keywords.errors }}
+                </div>
+        
+                <div class="form-group">
+                    <label for="{{ form.meta_description.id_for_label }}">Meta Description</label>
+                    {{ form.meta_description }}
+                    {{ form.meta_description.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.content.id_for_label }}">Content</label>
+                    {{ form.content }}
+                    {{ form.content.errors }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Submit</button>
+            </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'post_index' %}" class="btn btn-danger">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+<table class="table table-striped mt-4">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Keywords</th>
+        <th scope="col">Meta Description</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+     {% for post in posts %}
+     
+     <tr>
+       <th scope="row">{{ forloop.counter }}</th>
+       <td>{{ post.title }}</td>
+       <td>{{ post.keywords }}</td>
+       <td>{{ post.meta_description }}</td>
+       <td>
+           <a href="{% url 'post_edit' post.id %}" class="btn btn-primary">Edit</a>
+           <a href="{% url 'post_delete' post.id %}" class="btn btn-danger">Delete</a>
+       </td>
+     </tr>
+
+     {% endfor %}
+    </tbody>
+  </table>
+{% endblock innerSection %}
